@@ -8,29 +8,42 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notesappsaveonly.Model.Notes
 
 class MainActivity : AppCompatActivity() {
-    lateinit var ed:EditText
-    lateinit var bt:Button
-    lateinit var rc:RecyclerView
-    lateinit var list:ArrayList<String>
-    var s1=""
+    private lateinit var db: DBHelper
+
+    private lateinit var rvNotes: RecyclerView
+    private lateinit var editText: EditText
+    private lateinit var submitBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        rc=findViewById(R.id.RVv)
-        ed=findViewById(R.id.editTextTextPersonName)
-        bt=findViewById(R.id.button)
 
-        bt.setOnClickListener {
-            s1=ed.text.toString()
-            val dbhr =DBHelper(this)
-            val status = dbhr.savedata(s1)
-            Toast.makeText(applicationContext, "data Saved$status", Toast.LENGTH_SHORT).show()
-            ed.text.clear()
-            ed.clearFocus()
+        db = DBHelper(this)
 
-        }
+        editText = findViewById(R.id.tvNewNote)
+        submitBtn = findViewById(R.id.btSubmit)
+        submitBtn.setOnClickListener { postNote() }
 
-    }}
+        rvNotes = findViewById(R.id.rvNotes)
+        updateRV()
+    }
+
+    private fun updateRV(){
+        rvNotes.adapter = RVAdapter(this, getItemsList())
+        rvNotes.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun getItemsList(): ArrayList<Notes>{
+        return db.viewNotes()
+    }
+
+    private fun postNote(){
+        db.addNote(Notes(0, editText.text.toString()))
+        editText.text.clear()
+        Toast.makeText(this, "Note Added", Toast.LENGTH_LONG).show()
+        updateRV()
+    }
+}
