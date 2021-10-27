@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         db.deleteNote(Notes(noteID, ""))
         updateRV()
     }
-    
+
     fun raiseDialog(id: Int){
         val dialogBuilder = AlertDialog.Builder(this)
         val updatedNote = EditText(this)

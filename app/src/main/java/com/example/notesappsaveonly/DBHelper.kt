@@ -60,6 +60,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(
             return ArrayList()
         }
 
+
         var id: Int
         var noteText: String
 
@@ -74,5 +75,26 @@ class DBHelper(context: Context): SQLiteOpenHelper(
         }
 
         return noteList
+    }
+    fun updateNote(note: Notes): Int{
+        val db = this.writableDatabase
+
+        val contentValues = ContentValues()
+        contentValues.put(KEY_NOTE, note.noteText)
+
+        val success = db.update(TABLE_NOTES, contentValues, "$KEY_ID = ${note.id}", null)
+
+        db.close()
+        return success
+    }
+    fun deleteNote(note: Notes): Int{
+
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(KEY_ID, note.id)
+        val success = db.delete(TABLE_NOTES, "$KEY_ID = ${note.id}", null)
+        db.close()
+        return success
+//        success > 0 means it worked
     }
 }

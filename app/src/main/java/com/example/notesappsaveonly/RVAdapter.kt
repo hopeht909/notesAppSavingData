@@ -20,6 +20,13 @@ class RVAdapter(
         val notes = note[position]
         holder.bin.apply{
             textView.text= notes.noteText
+
+            ibEditNote.setOnClickListener {
+                activity.raiseDialog(notes.id)
+            }
+            ibDeleteNote.setOnClickListener {
+                activity.deleteNote(notes.id)
+            }
         }
     }
 
